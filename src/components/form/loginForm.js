@@ -7,19 +7,53 @@ import { loginSchema } from "../authComponent/authSchema";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { SignInGoogle, signInWithEmail } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const LoginForm = () => {
+    const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
+    const [submitValue, setSubmitValue] = useState(false);
 
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors },
     } = useForm({
         resolver: yupResolver(loginSchema),
     });
 
-    const onSubmit = (data) => console.log("Login Data:", data);
+    const handleGoogleSignIn = async () => {
+        const result = await SignInGoogle();
+        if (!result.success) {
+            console.error('Sign in failed:', result.error);
+            toast.error("Google sign-in failed. Please try again.");
+            return;
+        }
+        router.push(result.data.url);
+    };
+
+    const onSubmit = async (data) => {
+        setSubmitValue(true);
+        const { email, password } = data;
+        try {
+            const result = await signInWithEmail(email, password);
+
+            if (result.success) {
+                toast.success("Account created successfully!");
+                reset();
+                // router.push("/");
+            } else {
+                toast.error(result.error || "Registration failed. Try again.");
+            }
+        } catch (error) {
+            toast.error("Registration failed. Try again.");
+        }
+
+        setSubmitValue(false); // Loading OFF
+    };
 
     return (
         <div className="flex flex-col justify-center px-10 py-16 max-w-md w-full mx-auto">
@@ -33,9 +67,8 @@ const LoginForm = () => {
                     <input
                         {...register("email")}
                         placeholder="you@example.com"
-                        className={`w-full mt-1 p-3 border rounded-md outline-none text-black ${
-                            errors.email ? "border-red-500" : "border-gray-300"
-                        }`}
+                        className={`w-full mt-1 p-3 border rounded-md outline-none text-black ${errors.email ? "border-red-500" : "border-gray-300"
+                            }`}
                     />
                     <p className="text-red-500 text-sm mt-1">{errors.email?.message}</p>
                 </div>
@@ -48,9 +81,8 @@ const LoginForm = () => {
                         type={showPassword ? "text" : "password"}
                         {...register("password")}
                         placeholder="Enter your password"
-                        className={`w-full mt-1 p-3 border rounded-md outline-none text-black ${
-                            errors.password ? "border-red-500" : "border-gray-300"
-                        }`}
+                        className={`w-full mt-1 p-3 border rounded-md outline-none text-black ${errors.password ? "border-red-500" : "border-gray-300"
+                            }`}
                     />
 
                     {/* Show/Hide Password Icon */}
@@ -68,9 +100,13 @@ const LoginForm = () => {
                 {/* Login Button */}
                 <button
                     type="submit"
-                    className="w-full bg-[#0c223f] text-white py-3 rounded-md mt-2 hover:bg-[#0a1a32] transition"
+                    disabled={submitValue}
+                    className={`w-full bg-[#0c223f] text-white py-3 rounded-md mt-2 transition ${submitValue
+                        ? "opacity-60 cursor-not-allowed"
+                        : "hover:bg-[#0a1a32]"
+                        }`}
                 >
-                    Login
+                    {submitValue ? "Logging in..." : "Login"}
                 </button>
 
                 {/* Divider */}
@@ -85,6 +121,7 @@ const LoginForm = () => {
                     {/* Google */}
                     <button
                         type="button"
+                        onClick={handleGoogleSignIn}
                         className="flex items-center gap-2 border border-gray-300 rounded-md px-5 py-2.5 bg-white hover:bg-gray-100 transition cursor-pointer"
                     >
                         <Image
