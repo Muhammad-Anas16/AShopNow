@@ -1,7 +1,6 @@
 "use client";
 
 import { createAuthClient } from "better-auth/react";
-import { redirect } from "next/navigation";
 import { toast } from "sonner";
 
 export const authClient = createAuthClient({
@@ -104,10 +103,41 @@ const SignInGoogle = async () => {
         if (error) {
             return { success: false, error: error.message };
         }
+        
+        return { success: true, data };
+    } catch (error) {
+        return { success: false, error: error.message || "Something went wrong" };
+    }
+};
 
-        // if (data?.url) {
-        //     redirect(data.url);
-        // }
+const SignInGithub = async () => {
+    try {
+        const { data, error } = await authClient.signIn.social(
+            {
+                provider: "github",
+                callbackURL: "/",
+                errorCallbackURL: "/auth/register",
+                newUserCallbackURL: "/",
+                disableRedirect: true,
+            },
+            {
+                onRequest: (ctx) => {
+                    console.log("auth-client onRequest GitHub sign-in ", ctx);
+                    // toast("Signing in with GitHub...");
+                },
+                onSuccess: (ctx) => {
+                    console.log("checking data on GitHub SignIn when on success", ctx.data);
+                    // toast.success("GitHub sign in successful!");
+                },
+                onError: (ctx) => {
+                    console.log(ctx.error.message);
+                },
+            }
+        );
+
+        if (error) {
+            return { success: false, error: error.message };
+        }
         
         return { success: true, data };
     } catch (error) {
@@ -116,4 +146,4 @@ const SignInGoogle = async () => {
 };
 
 
-export { SignUpWithEmail, signInWithEmail, SignInGoogle };
+export { SignUpWithEmail, signInWithEmail, SignInGoogle, SignInGithub };

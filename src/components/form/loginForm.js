@@ -7,7 +7,7 @@ import { loginSchema } from "../authComponent/authSchema";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { SignInGoogle, signInWithEmail } from "@/lib/auth-client";
+import { SignInGithub, SignInGoogle, signInWithEmail } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -30,6 +30,16 @@ const LoginForm = () => {
         if (!result.success) {
             console.error('Sign in failed:', result.error);
             toast.error("Google sign-in failed. Please try again.");
+            return;
+        }
+        router.push(result.data.url);
+    };
+
+    const handleGithubSignIn = async () => {
+        const result = await SignInGithub();
+        if (!result.success) {
+            console.error('GitHub sign in failed:', result.error);
+            toast.error("GitHub sign-in failed. Please try again.");
             return;
         }
         router.push(result.data.url);
@@ -136,6 +146,7 @@ const LoginForm = () => {
                     {/* GitHub */}
                     <button
                         type="button"
+                        onClick={handleGithubSignIn}
                         className="flex items-center gap-2 border border-gray-300 rounded-md px-5 py-2.5 bg-white hover:bg-gray-100 transition cursor-pointer"
                     >
                         <Image
