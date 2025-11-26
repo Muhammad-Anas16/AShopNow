@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { FaTrash } from "react-icons/fa";
-import { FaArrowLeftLong, FaLock } from "react-icons/fa6";
+import { FaArrowLeftLong } from "react-icons/fa6";
 
 export default function ShoppingCart() {
   const [cartItems, setCartItems] = useState([

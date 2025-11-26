@@ -1,6 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { FaMinus, FaPlus } from "react-icons/fa";
+import { IoMdStar, IoStarHalf } from "react-icons/io";
+
 // import Link from "next/link";
 
 const ProductDetailComponent = () => {
@@ -197,11 +200,11 @@ const ProductDetailComponent = () => {
                     className="px-3 py-2 text-text-muted-light hover:text-text-light"
                   >
                     <span className="material-symbols-outlined text-xl">
-                      remove
+                      <FaMinus />
                     </span>
                   </button>
                   <input
-                    className="w-12 text-center border-0 bg-transparent focus:ring-0"
+                    className="w-12 font-bold text-center border-0 bg-transparent focus:ring-0"
                     value={quantity}
                     readOnly
                   />
@@ -210,14 +213,11 @@ const ProductDetailComponent = () => {
                     className="px-3 py-2 text-text-muted-light hover:text-text-light"
                   >
                     <span className="material-symbols-outlined text-xl">
-                      add
+                      <FaPlus />
                     </span>
                   </button>
                 </div>
                 <button className="flex-1 flex items-center justify-center rounded-lg h-12 bg-primary text-white gap-2">
-                  <span className="material-symbols-outlined">
-                    add_shopping_cart
-                  </span>
                   Add to Cart
                 </button>
               </div>
