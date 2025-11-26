@@ -3,7 +3,7 @@
 import React, { use, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { registerSchema } from "../authComponent/authSchema";
+import { registerSchema } from "../../Model_Schema/authSchema";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { SignUpWithEmail } from "../../lib/auth-client";

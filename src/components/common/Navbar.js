@@ -36,8 +36,10 @@ export default function Navbar() {
 
         {/* Icons */}
         <div className="hidden md:flex items-center gap-6 text-gray-700">
-          <Heart className="w-5 h-5 cursor-pointer" />
+          {/* <Heart className="w-5 h-5 cursor-pointer" /> */}
+          <Link href="/shopping_cart">
           <ShoppingBag className="w-5 h-5 cursor-pointer" />
+          </Link>
           <User className="w-5 h-5 cursor-pointer" />
         </div>
 
